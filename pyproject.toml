@@ -1,0 +1,60 @@
+[project]
+name = "winregenv"
+version = "0.1.0"
+description = "A Pythonic, safer interface for common Windows Registry operations built on winreg."
+readme = "README.md"
+authors = [
+  { name="Travis Bender", email="travisgbender@gmail.com" },
+]
+requires-python = ">=3.8"
+dependencies = [
+]
+
+keywords = ["windows", "registry", "winreg", "environment", "elevation", "admin"]
+
+license = "MIT"
+license-files = ["LICENSE"]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-mock",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+markers = [
+    "xdist_group: marker for grouping tests to run sequentially with pytest-xdist",
+]
+
+[project.urls]
+Homepage = "https://github.com/tgbender/winregenv"
+Repository = "https://github.com/tgbender/winregenv"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
