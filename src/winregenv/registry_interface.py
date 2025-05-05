@@ -12,7 +12,7 @@ keys and values relative to the configured root, prefix, and view.
 """ # noqa: E501
 import winreg
 import inspect
-from typing import Any, List, Tuple, Dict, Optional
+from typing import Any, List, Tuple, Dict, Optional, Union
 import logging
 from .registry_base import (
     put_registry_value,
@@ -92,7 +92,7 @@ _ROOT_KEY_INT_TO_NAME[winreg.HKEY_LOCAL_MACHINE] = "HKLM"
 _ROOT_KEY_INT_TO_NAME[winreg.HKEY_USERS] = "HKU"
 
 
-def normalize_root_key(key_identifier : int | str) -> int:
+def normalize_root_key(key_identifier : Union[int, str]) -> int:
     """
     Helper function to get the root key value from a string or int.
     Allows users to specify the base key by name in addition to int.
@@ -119,7 +119,7 @@ _ELEVATION_REQUIRED_ROOT_KEYS = {
 class RegistryRoot:
     def __init__(
         self,
-        root_key: int | str,
+        root_key: Union[int, str],
         root_prefix: str = None,
         access_32bit_view: bool = False,
         read_only: bool = False,
@@ -190,7 +190,7 @@ class RegistryRoot:
         value_name:str,
         value_data:Any,
         *,
-        value_type: Optional[int | str] = None,
+        value_type: Optional[Union[int,str]] = None,
     ) -> None:
         """
         Create or update a registry value under the root key and prefix,

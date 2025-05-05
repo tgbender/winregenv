@@ -7,7 +7,7 @@ and does not expose any public API.
 """
 
 import winreg
-from typing import Any, Tuple, Optional, List
+from typing import Any, Tuple, Optional, List, Union
 import logging
 
 logger = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ def get_reg_type_name(reg_type: int) -> str:
 # This will now correctly map "REG_DWORD" -> 4 and "REG_QWORD" -> 11
 _REG_NAME_TO_TYPE = {name: value for value, name in _REG_TYPE_NAMES.items()}
 
-def _normalize_registry_type_input(type_input: int | str) -> int:
+def _normalize_registry_type_input(type_input: Union[int,str]) -> int:
     """
     Normalizes a registry type input (int, string name) to its integer value.
 

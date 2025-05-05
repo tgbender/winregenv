@@ -12,11 +12,13 @@ dependencies = [
 
 keywords = ["windows", "registry", "winreg", "environment", "elevation", "admin"]
 
+license = "MIT"
+license-files = ["LICENSE"]
+
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: System Administrators",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: Microsoft :: Windows",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
@@ -33,8 +35,6 @@ classifiers = [
 dev = [
     "pytest",
     "pytest-mock",
-    "build",
-    "twine",
 ]
 
 [build-system]
@@ -53,3 +53,9 @@ Repository = "https://github.com/tgbender/winregenv"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true

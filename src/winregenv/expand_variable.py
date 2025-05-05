@@ -119,15 +119,39 @@ if __name__ == "__main__":
     try:
         print(f"Expanding %TEMP%: {expand_environment_strings('%TEMP%')}")
         print(f"Expanding %USERPROFILE%: {expand_environment_strings('%USERPROFILE%')}")
-        print(f"Expanding %SystemRoot%\\System32: {expand_environment_strings('%SystemRoot%\\System32')}")
+
+        # Build the string with backslashes outside the f-string
+        system32_path = r'%SystemRoot%\System32' # Using a raw string is good practice for paths
+
+        # Use the built string in the f-string or format
+        print(f"Expanding {system32_path}: {expand_environment_strings(system32_path)}")
+        # Alternatively, using .format():
+        # print("Expanding {}: {}".format(system32_path, expand_environment_strings(system32_path)))
+
+
         print(f"Expanding %NON_EXISTENT_VAR%: {expand_environment_strings('%NON_EXISTENT_VAR%')}") # Should remain unexpanded
-        print(f"Expanding mixed string: {expand_environment_strings('User: %USERNAME%, Temp: %TEMP%')}")
-        print(f"Expanding user Path: {expand_environment_strings('Path: %PATH%')}")
+
+        # Build the mixed string outside
+        mixed_string = 'User: %USERNAME%, Temp: %TEMP%'
+        print(f"Expanding mixed string: {expand_environment_strings(mixed_string)}")
+
+        # Build the path string outside
+        user_path_string = 'Path: %PATH%'
+        print(f"Expanding user Path: {expand_environment_strings(user_path_string)}")
+
 
         # Test with a string that might exceed the initial buffer size
-        long_string_template = "Path: %SystemRoot%\\" + "a" * 500 + "\\%TEMP%"
-        print(f"\nExpanding potentially long string: {long_string_template}")
-        expanded_long_string = expand_environment_strings(long_string_template)
+        # Build the long string template outside the print statement
+        long_string_template_built = r"Path: %SystemRoot%\\" + "a" * 500 + r"\%TEMP%" # Using raw strings for path parts
+        # Note: The string passed to expand_environment_strings should have single backslashes
+        # Ensure the string passed to the function is correctly formatted for the function
+        # In this case, the built string `long_string_template_built` already has the literal backslashes correct.
+
+        print(f"\nExpanding potentially long string: {long_string_template_built}")
+
+        # Pass the built string to the function
+        expanded_long_string = expand_environment_strings(long_string_template_built)
+
         print(f"Expanded: {expanded_long_string}")
         print(f"Length: {len(expanded_long_string)}")
 
@@ -141,3 +165,4 @@ if __name__ == "__main__":
              print(f"  Message: {e.strerror}", file=sys.stderr)
     except Exception as e:
         print(f"An unexpected error occurred: {e}", file=sys.stderr)
+
