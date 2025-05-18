@@ -13,6 +13,7 @@ from .registry_errors import (
 from .registry_types import RegistryValue # noqa: F401 # Imported for __all__ and type hints
 from .registry_interface import normalize_root_key # Import the new public function
 from .registry_translation import normalize_registry_type # Import the new public function
+from .winapi import broadcast_setting_change
 
 __all__ = [
     "RegistryRoot", # Add the main interface class
@@ -29,6 +30,7 @@ __all__ = [
     "is_elevated", # Add is_elevated to the public API
     "get_integrity_level", # Add get_integrity_level to the public API
     "expand_environment_strings",
+    "broadcast_setting_change",
 
     # Add common REG_* constants to __all__ so users don't need to import winreg directly
     "REG_SZ",
@@ -56,4 +58,4 @@ from .registry_translation import ( # noqa: F401 # Imported for __all__
 )
 
 #Version Attribute
-__version__ = "0.1.0"
+__version__ = "0.2.0"

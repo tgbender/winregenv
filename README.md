@@ -62,7 +62,13 @@ try:
     hkcu_root.put_registry_subkey(TEST_KEY_PATH, "SubKeyA") # Create an empty subkey
     print("Values and subkey created.")
 
-    # 3. Read values
+    # 3. Broadcast the environment-variable change so other apps (Explorer, cmd.exe, etc.)
+    #    will pick up the new value immediately without a full log-off/log-on.
+    from winregenv import broadcast_setting_change
+    broadcast_setting_change("Environment")
+    print("Broadcasted environment change.")
+
+    # 4. Read values
     print(f"\nReading values from HKCU\\{TEST_KEY_PATH}:")
     string_val = hkcu_root.get_registry_value(TEST_KEY_PATH, "StringValue")
     print(f"  '{string_val.name}': {string_val.data} (Type: {string_val.type_name})") # Use type_name for string
@@ -72,36 +78,36 @@ try:
     # Access the expanded data property for REG_EXPAND_SZ values
     print(f"    Expanded: {expand_val.expanded_data}")
 
-    # 4. List all values in the key
+    # 5. List all values in the key
     print(f"\nListing all values in HKCU\\{TEST_KEY_PATH}:")
     all_values = hkcu_root.list_registry_values(TEST_KEY_PATH)
     for val in all_values:
         print(f"  '{val.name}': {val.data} (Type: {val.type_name})")
 
-    # 5. List subkeys
+    # 6. List subkeys
     print(f"\nListing subkeys in HKCU\\{TEST_KEY_PATH}:")
     subkeys = hkcu_root.list_registry_subkeys(TEST_KEY_PATH)
     print(f"  Subkeys: {subkeys}")
 
-    # 6. Get key metadata
+    # 7. Get key metadata
     print(f"\nGetting metadata for HKCU\\{TEST_KEY_PATH}:")
     metadata = hkcu_root.head_registry_key(TEST_KEY_PATH)
     print(f"  Metadata: {metadata}")
 
-    # 7. Delete a value
+    # 8. Delete a value
     print(f"\nDeleting 'IntValue' from HKCU\\{TEST_KEY_PATH}...")
     # No error if the value doesn't exist
     hkcu_root.delete_registry_value(TEST_KEY_PATH, "IntValue")
     print("'IntValue' deleted (or was already missing).")
 
-    # 8. Attempt to delete the key (will fail because SubKeyA exists)
+    # 9. Attempt to delete the key (will fail because SubKeyA exists)
     print(f"\nAttempting to delete HKCU\\{TEST_KEY_PATH} (should fail)...")
     try:
         hkcu_root.delete_registry_key(TEST_KEY_PATH)
     except RegistryKeyNotEmptyError as e:
         print(f"  Caught expected error: {e}")
 
-    # 9. Clean up: Delete the subkey first, then the main key
+    # 10. Clean up: Delete the subkey first, then the main key
     print(f"\nCleaning up: Deleting subkey HKCU\\{TEST_KEY_PATH}\\SubKeyA...")
     hkcu_root.delete_registry_key(TEST_KEY_PATH + r"\SubKeyA")
     print("SubKeyA deleted.")
@@ -190,6 +196,8 @@ The library also exposes some useful helper functions:
 * `is_elevated() -> bool`: Checks if the current process is running with administrative privileges (High integrity level or higher). Returns `True` if elevated, `False` otherwise. Raises `OSError` if the check fails.
 * `get_integrity_level() -> int`: Returns the raw integer RID representing the process's integrity level. Raises `OSError` or `ValueError` if retrieval fails.
 * `expand_environment_strings(input_string: str) -> str`: Directly calls the Windows API to expand environment variables within a string (equivalent to `RegistryValue.expanded_data` but callable directly).
+* `broadcast_setting_change(setting_name: Optional[str] = "Environment", timeout_ms: int = 5000) -> None`:  
+  Broadcasts a `WM_SETTINGCHANGE` message to all top-level windows so that changes to environment variables (or other system settings) are picked up by running processes. Raises `MessageTimeoutError` if the broadcast times out.
 
 ## Comparison: Reading a Value with Raw `winreg`
 
